@@ -121,22 +121,60 @@ class RequestExpectation {
 		return $this;
 	}
 
-	/**
+
+		/**
 	 * @param array|callable $queryParams
+   * @param array $exludes params excludes
 	 * @return $this
 	 */
-	public function withQueryParams($queryParams) {
-		$this->requestExpectations['query'] = new Expect\Predicate(function (RequestInterface $request) use ($queryParams) {
-			$expectation = is_callable($queryParams) ? $queryParams : new Expect\ArrayEquals($queryParams, 'query params');
+	// public function withQueryParams($queryParams, $excludes = []) {
+		public function withQueryParams($queryParams, $excludes = []) {
+			echo "------";
+			var_dump($excludes);
+			$this->requestExpectations['query'] = new Expect\Predicate(function (RequestInterface $request) use ($queryParams, $excludes) {
+				// $expectation  = $queryParams;
+				if (is_callable($queryParams)) {
+					$expectation  = $queryParams;
+				} else {
+			
+					// if($excludes) $excludes = array();
+					array_walk($excludes, function($param) use(&$queryParams) {
+  
+						if (in_array($param, array_keys($queryParams))) {
+							unset($queryParams[$param]);
+						}
+					  });
+					  			
+					$expectation = new Expect\ArrayEquals($queryParams, 'query params');
+				}
+	
+				// The client library of guzzle automatically appends the query params to the uri before
+				// invoking the middleware stack
+				parse_str($request->getUri()->getQuery(), $query);
+				return $expectation($query);
+			}, 'query params expectation failed');
+	
+			return $this;
+		}
+	
 
-			// The client library of guzzle automatically appends the query params to the uri before
-			// invoking the middleware stack
-			parse_str($request->getUri()->getQuery(), $query);
-			return $expectation($query);
-		}, 'query params expectation failed');
+// 	/**
+// 	 * @param array|callable $queryParams
+//    * @param array $exludes params excludes
+// 	 * @return $this
+// 	 */
+	
+// 	public function withQueryParams($queryParams) {
+// 		$this->requestExpectations['query'] = new Expect\Predicate(function (RequestInterface $request) use ($queryParams) {
+// 			$expectation  = is_callable($queryParams)? $queryParams:new Expect\ArrayEquals($queryParams, 'query params');
+// 			// The client library of guzzle automatically appends the query params to the uri before
+// 				// invoking the middleware stack
+// 				parse_str($request->getUri()->getQuery(), $query);
+// 				return $expectation($query);
+// 		}, 'query params expectation failed');
 
-		return $this;
-	}
+// 		return $this;
+// 	}
 
 	/**
 	 * @param string $queryString

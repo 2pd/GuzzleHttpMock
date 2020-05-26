@@ -8,7 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use Aeris\GuzzleHttpMock\Mock;
 use Aeris\GuzzleHttpMock\Expect;
 
-class MockTest extends \PHPUnit_Framework_TestCase {
+class MockTest extends \PHPUnit\Framework\TestCase {
 
 	/** @var GuzzleClient */
 	protected $guzzleClient;
@@ -430,6 +430,24 @@ class MockTest extends \PHPUnit_Framework_TestCase {
 
 		$this->guzzleClient
 			->put('http://www.example.com/foo');
+
+		$this->httpMock->verify();
+	}
+
+	/**
+	 * @test
+	 */
+	public function testQueryParamsExcludes() {
+		$this->httpMock
+			->shouldReceiveRequest()
+			->withMethod('GET')
+			->withUrl('http://www.example.com/foo')
+			->withQueryParams(['foo' => 'bar', 'a' => 'a_value'], ['a']);
+
+		$this->guzzleClient
+			->get('http://www.example.com/foo', [
+				'query' => ['foo' => 'bar']
+			]);
 
 		$this->httpMock->verify();
 	}

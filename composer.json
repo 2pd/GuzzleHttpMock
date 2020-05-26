@@ -40,5 +40,8 @@
       "Aeris\\GuzzleHttpMock\\": "src/",
       "Aeris\\GuzzleHttpMockTest\\": "test/GuzzleHttpMockTest/"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0"
   }
 }

@@ -145,6 +145,11 @@ class RequestExpectation {
 			// The client library of guzzle automatically appends the query params to the uri before
 			// invoking the middleware stack
 			parse_str($request->getUri()->getQuery(), $query);
+			array_walk($excludes, function($param) use(&$query) {
+				if (in_array($param, array_keys($query))) {
+					unset($query[$param]);
+				}
+			});
 			return $expectation($query);
 		}, 'query params expectation failed');
 

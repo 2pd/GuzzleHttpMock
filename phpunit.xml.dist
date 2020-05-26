@@ -1,0 +1,14 @@
+<phpunit
+        colors="true"
+        stderr="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        stopOnFailure="false"
+        bootstrap="test/Bootstrap.php">
+    <testsuites>
+        <testsuite name="GuzzleHttpMockTest">
+            <directory>./test</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -1,5 +1,5 @@
 {
-  "name": "systemhaus/guzzle-http-mock",
+  "name": "2pd/guzzle-http-mock",
   "description": "A mock library for verifying requests made with the Guzzle Http Client, and mocking responses.",
   "keywords": [
     "testing",
